@@ -1,0 +1,66 @@
+#
+
+version: '3'
+services:
+  v2board:
+    container_name: ${CONTAINER_NAME}
+    image: "${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      # v2board 配置
+      - APP_NAME=${APP_NAME}
+      - APP_KEY=${APP_KEY}
+      - BASEURL=${PROTOCOL}://${DOMAIN}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      # 构建配置
+      - DBMODE=${DBMODE}
+      - REINSTALL=${REINSTALL}
+      - REPOVISI=${REPOVISI}
+      - GITREPO=${GITREPO}
+      - REPOURL=${REPOURL}
+      - BRANCH=${BRANCH}
+      # redis 配置
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      # admin 配置
+      - ADMIN_MAIL=${ADMIN_MAIL}
+    volumes:
+      - ${NGINX_WWW_PATH}/${APP_HOME}:/app
+      - v2board_config:/opt/bitnami/backup
+    restart: always
+    depends_on:
+      - redis_v2board
+    networks:
+      - ext_network
+
+  redis_v2board:
+    container_name: redis_v2board
+    image: docker.io/bitnami/redis:7.0.12
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    # ports:
+    # - '${REDIS_PORT}:6379'
+    volumes:
+      - redis_v2board_data:/bitnami/redis/data
+    restart: unless-stopped
+    networks:
+      - ext_network
+
+volumes:
+  v2board_config:
+    driver: local
+  redis_v2board_data:
+    driver: local
+
+networks:
+  ext_network:
+    external: true
