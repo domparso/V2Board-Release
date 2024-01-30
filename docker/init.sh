@@ -3,10 +3,20 @@
 
 # set -e
 
+ADMIN_REPOURL="${ADMIN_REPOURL:-https://github.com/v2board/v2board-admin.git}"
+USER_REPOURL="${USER_REPOURL:-https://github.com/v2board/v2board-user.git}"
+
+SLEEK_REPOURL="${SLEEK_REPOURL:-https://github.com/binglog/V2b-Theme-Sleek.git}"
+ARGON_REPOURL="${SLEEK_REPOURL:-https://github.com/BobCoderS9/Bob-Theme-Argon.git}"
+
 APPHOME=/app
 PHPPATH=/opt/bitnami/php/bin/php
 BACKUPPATH=/opt/bitnami/backup
 CONFIG_FILE=.env
+
+DEPLOY_MODE=false
+THEME_MODEL=v2board
+THEME_TAG=
 
 
 is_empty_dir(){ 
@@ -95,6 +105,21 @@ if [[ "`ls -A ${APPHOME}`" = "" ]]; then
 		if [[ -n "$REDIS_PORT" ]]; then
 			sed -i -e "s/REDIS_PORT=6379/REDIS_PORT=$REDIS_PORT/g" $CONFIG_FILE
 		fi
+	fi
+
+	if [[ $THEME_MODEL = "sleek" ]]; then
+		cd $APPHOME/public/theme \
+		&& wget -O wget -O Theme-Sleek.zip https://github.com/binglog/V2b-Theme-Sleek/releases/download/$THEME_TAG/Theme-Sleek.zip \
+		&& unzip Theme-Sleek.zip \
+		&& rm -rf Theme-Sleek.zip
+	else if [[ $THEME_MODEL != "argon" ]]; then
+		cd $APPHOME/public/theme \
+		&& wget -O Bob-Theme-Argon.zip https://github.com/BobCoderS9/Bob-Theme-Argon/archive/refs/tags/$THEME_TAG.zip \
+		&& unzip Bob-Theme-Argon.zip \
+		&& rm -rf Bob-Theme-Argon.zip \
+		&& mv Bob-Theme-Argon* Bob-Theme-Argon
+	else
+	
 	fi
 
 	# 站点初始化设置

@@ -30,6 +30,9 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       # admin 配置
       - ADMIN_MAIL=${ADMIN_MAIL}
+      # 主题选择
+      - THEME_MODEL={THEME_MODEL}
+      - THEME_TAG={THEME_TAG}
     depends_on:
       - mariadb
       - nginx
