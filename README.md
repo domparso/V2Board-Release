@@ -35,7 +35,7 @@ Mariadb默认是不支持外部访问，如果需要，请将docker/docker-compo
 	因为环境问题，只测试了debian
 
 ## 使用于xrayr的解锁检测脚本
-	curl -LsO https://raw.githubusercontent.com/domparso/SSPanel-Uim-Release/master/csm-xrayr.sh \
+	curl -LsO https://raw.githubusercontent.com/domparso/V2Board-Release/master/csm-xrayr.sh \
 	&& chmod +x csm-xrayr.sh \
 	&& ./csm-xrayr.sh
 
